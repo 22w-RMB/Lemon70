@@ -89,7 +89,9 @@ class readExcel:
             elif RequestWay == 'patch':
                 real_result = self.__PatchRequest(url = url,body=body,header=header)
             #并将断言结果写入
+            
             self.__write_result(SheetName, CaseDict['Except'], real_result, row+2)
+            self.__printResult(real_result)
 
     #Post请求
     def __PostRequest(self,url,body,header):
@@ -124,10 +126,16 @@ class readExcel:
         #断言
         if real_code == except_code:
             sheet.cell(row=row, column=11).value = "这条用例通过了"
+            print("这条用例通过了")
         else:
             sheet.cell(row=row, column=11).value = "这条用例不通过"
+            print("这条用例不通过")
         #保存到excel
         self.__wb.save('接口测试用例.xlsx')
+        
+    def __printResult(self,real_result):
+        print(real_result['msg'])
+        print('*' * 20)
 
     #判断是否需要token，并获取对应的用户信息
     def __JudgeIsNeedToken(self,isNeedToken):
@@ -165,6 +173,8 @@ class readExcel:
             'token' : result['data']['token_info']['token']
         }
 
+
+
     #开始执行
     def run(self,SheetName,isNeedToken):
         #先获取当前表的所有用例
@@ -173,6 +183,8 @@ class readExcel:
         UserInfo = self.__JudgeIsNeedToken(isNeedToken)
         #判断请求并执行
         self.__requestJudge(SheetName,Cases,UserInfo)
+        
+        
 
 
 
@@ -182,6 +194,7 @@ user = 1            #普通用户
 admin = 2           #管理员
 
 re.run('register',NotNeedToken)
+'''
 re.run('login',NotNeedToken)
 re.run('recharge',user)
 re.run('withdraw',user)
@@ -192,6 +205,6 @@ re.run('audit',admin)
 re.run('invest',user)
 re.run('loans',user)
 
-
+'''
 
 
